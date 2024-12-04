@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"teekometDev/filereader"
+	"time"
 )
 
 const CRITICAL_MAX_INC = 3
@@ -54,6 +55,7 @@ func safeReport2(report []int) bool {
 }
 
 func main() {
+	start := time.Now()
 	message := filereader.HelloWorld()
 	fmt.Println((message))
 	resultMatrix := filereader.ReadFile("input.txt")
@@ -70,4 +72,7 @@ func main() {
 	}
 	fmt.Print("Task1: ", safeReports)
 	fmt.Print("Task2: ", safeReports2)
+	end := time.Now()
+	duration := end.Sub(start)
+	fmt.Printf("Runtime: %v\n", duration.Seconds())
 }

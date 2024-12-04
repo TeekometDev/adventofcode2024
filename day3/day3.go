@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"teekometDev/filereader3"
+	"time"
 )
 
 func Hello() string {
@@ -56,7 +57,11 @@ func multiply(operation string) int {
 }
 
 func main() {
+	start := time.Now()
 	result1 := SolveT1("input.txt")
 	result2 := SolveT2("input.txt")
 	fmt.Printf("Task1 Solution: %d\nTask2 Solution: %d\n", result1, result2)
+	end := time.Now()
+	duration := end.Sub(start)
+	fmt.Printf("Runtime: %v\n", duration.Seconds())
 }
