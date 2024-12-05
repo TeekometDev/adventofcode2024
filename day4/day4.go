@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"teekometDev/filereader4"
 	"teekometDev/matrixhelpers"
+	"time"
 )
 
 func Task1(fileName string) int {
@@ -63,7 +64,11 @@ func checkCrossing(word1 string, word2 string) bool {
 }
 
 func main() {
+	start := time.Now()
 	result1 := Task1("input.txt")
 	result2 := Task2("input.txt")
 	fmt.Printf("Result 1: %d\nResult 2: %d\n", result1, result2)
+	end := time.Now()
+	duration := end.Sub(start)
+	fmt.Printf("Runtime: %v\n", duration.Seconds())
 }
