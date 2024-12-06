@@ -38,3 +38,12 @@ func TestT1Result(t *testing.T) {
 		t.Errorf("Got %d instead of %d", got, want)
 	}
 }
+
+func TestT2Result(t *testing.T) {
+	got := Task2("input.txt")
+	want := 5331
+
+	if got != want {
+		t.Errorf("Got %d instead of %d", got, want)
+	}
+}

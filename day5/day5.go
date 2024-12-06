@@ -7,12 +7,17 @@ import (
 	"strconv"
 	"strings"
 	"teekometDev/filereader5"
+	"time"
 )
 
 func main() {
+	start := time.Now()
 	result1 := Task1("input.txt")
 	result2 := Task2("input.txt")
 	fmt.Printf("RESULT T1: %d, RESULT T2: %d\n", result1, result2)
+	end := time.Now()
+	duration := end.Sub(start)
+	fmt.Printf("Runtime: %v\n", duration.Seconds())
 }
 
 func Task1(fileName string) int {
