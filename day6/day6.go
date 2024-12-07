@@ -3,12 +3,17 @@ package main
 import (
 	"fmt"
 	"teekometDev/filereader4"
+	"time"
 )
 
 func main() {
+	start := time.Now()
 	result1 := Task1(getFile("input.txt"))
 	result2 := Task2(getFile("input.txt"))
-	fmt.Printf("RESULT 1: %d, RESULT 2: %d", result1, result2)
+	fmt.Printf("RESULT 1: %d, RESULT 2: %d\n", result1, result2)
+	end := time.Now()
+	duration := end.Sub(start)
+	fmt.Printf("Runtime: %v\n", duration.Seconds())
 }
 
 func getFile(fileName string) [][]rune {
