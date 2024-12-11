@@ -2,14 +2,22 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"teekometDev/filereader4"
 	"time"
 )
 
 func main() {
+	args := os.Args
+	var fileName string
+	if len(args) > 1 {
+		fileName = args[1]
+	} else {
+		fileName = "input.txt"
+	}
 	start := time.Now()
-	file := filereader4.ReadFileAsMatrix("input.txt")
+	file := filereader4.ReadFileAsMatrix(fileName)
 	res_1 := Task1(file)
 	res_2 := Task2(file)
 	fmt.Printf("RESULT 1: %d, RESULT 2: %d\n", res_1, res_2)
