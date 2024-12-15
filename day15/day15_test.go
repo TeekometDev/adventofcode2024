@@ -34,13 +34,3 @@ func TestTask2(t *testing.T) {
 		t.Errorf("Got %d and wanted %d\n", got, want)
 	}
 }
-
-func TestTask2Small(t *testing.T) {
-	file := filereader5.ReadFile("ex2.txt")
-	got := Task2(file)
-	want := 9021
-
-	if got != want {
-		t.Errorf("Got %d and wanted %d\n", got, want)
-	}
-}

@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 func Task2(file []string) int {
 	var robot Robot
 	var warehouse [][]FieldObject
@@ -32,14 +30,18 @@ func Task2(file []string) int {
 		}
 		warehouse = append(warehouse, warehouseLine)
 	}
-	fmt.Println("Initial:")
 	for _, move := range robot.movementList {
-		printDoubledPlayground(&warehouse, &robot)
-		fmt.Printf("Next Move: %d\n", move)
 		moveRobot2(&robot, &warehouse, move)
 	}
-	printDoubledPlayground(&warehouse, &robot)
-	return 0
+	res := 0
+	for y := range len(warehouse) {
+		for x := range len(warehouse[y]) {
+			if warehouse[y][x] == BoxLeft {
+				res += 100*y + x
+			}
+		}
+	}
+	return res
 }
 
 func moveRobot2(robot *Robot, playground *[][]FieldObject, move Movement) {
@@ -49,7 +51,6 @@ func moveRobot2(robot *Robot, playground *[][]FieldObject, move Movement) {
 	case Up:
 		y_pos -= 1
 		if !moveIfPossible(robot, x_pos, y_pos, playground) {
-			fmt.Printf("New Position: %d %d\n", y_pos, x_pos)
 			if checkBoxesUp(x_pos, y_pos, playground, true) {
 				moveBigBoxesUp(x_pos, y_pos, playground)
 				robot.y_pos = y_pos
@@ -59,7 +60,7 @@ func moveRobot2(robot *Robot, playground *[][]FieldObject, move Movement) {
 		y_pos += 1
 		if !moveIfPossible(robot, x_pos, y_pos, playground) {
 			if checkBoxesDown(x_pos, y_pos, playground, true) {
-				moveBigBoxesDown(x_pos, y_pos, playground, true)
+				moveBigBoxesDown(x_pos, y_pos, playground)
 				robot.y_pos = y_pos
 			}
 		}
@@ -99,10 +100,8 @@ func moveIfPossible(robot *Robot, new_x int, new_y int, field *[][]FieldObject) 
 func checkBoxesUp(x_pos int, y_pos int, field *[][]FieldObject, first bool) bool {
 	if first {
 		if (*field)[y_pos][x_pos] == BoxLeft {
-			fmt.Printf("Checking: %d %d and %d %d\n", y_pos, x_pos, y_pos, x_pos+1)
 			return checkBoxesUp(x_pos, y_pos, field, false) && checkBoxesUp(x_pos+1, y_pos, field, false)
 		} else {
-			fmt.Printf("Checking: %d %d and %d %d\n", y_pos, x_pos, y_pos, x_pos-1)
 			return checkBoxesUp(x_pos-1, y_pos, field, false) && checkBoxesUp(x_pos, y_pos, field, false)
 		}
 	}
@@ -122,16 +121,18 @@ func checkBoxesUp(x_pos int, y_pos int, field *[][]FieldObject, first bool) bool
 func moveBigBoxesUp(x_pos int, y_pos int, field *[][]FieldObject) {
 	currElement := (*field)[y_pos][x_pos]
 	if currElement == BoxLeft {
-		moveBigBoxesUp(x_pos, y_pos-1, field)
-		moveBigBoxesUp(x_pos+1, y_pos-1, field)
+		if (*field)[y_pos-1][x_pos] == BoxLeft {
+			moveBigBoxesUp(x_pos, y_pos-1, field)
+		} else {
+			moveBigBoxesUp(x_pos, y_pos-1, field)
+			moveBigBoxesUp(x_pos+1, y_pos-1, field)
+		}
+		(*field)[y_pos-1][x_pos] = BoxLeft
 		(*field)[y_pos][x_pos] = Empty
-		(*field)[y_pos-1][x_pos] = currElement
-	}
-	if currElement == BoxRight {
-		moveBigBoxesUp(x_pos-1, y_pos-1, field)
-		moveBigBoxesUp(x_pos, y_pos-1, field)
-		(*field)[y_pos][x_pos] = Empty
-		(*field)[y_pos-1][x_pos] = currElement
+		(*field)[y_pos-1][x_pos+1] = BoxRight
+		(*field)[y_pos][x_pos+1] = Empty
+	} else if currElement == BoxRight {
+		moveBigBoxesUp(x_pos-1, y_pos, field)
 	}
 }
 
@@ -156,32 +157,22 @@ func checkBoxesDown(x_pos int, y_pos int, field *[][]FieldObject, first bool) bo
 	return true
 }
 
-func moveBigBoxesDown(x_pos int, y_pos int, field *[][]FieldObject, first bool) {
-	if first {
-		if (*field)[y_pos][x_pos] == BoxLeft {
-			moveBigBoxesDown(x_pos, y_pos, field, false)
-			moveBigBoxesDown(x_pos+1, y_pos, field, false)
-			return
-		} else {
-			moveBigBoxesDown(x_pos-1, y_pos, field, false)
-			moveBigBoxesDown(x_pos, y_pos, field, false)
-			return
-		}
-	}
+func moveBigBoxesDown(x_pos int, y_pos int, field *[][]FieldObject) {
 	currElement := (*field)[y_pos][x_pos]
 	if currElement == BoxLeft {
-		moveBigBoxesDown(x_pos, y_pos+1, field, false)
-		moveBigBoxesDown(x_pos+1, y_pos+1, field, false)
+		if (*field)[y_pos+1][x_pos] == BoxLeft {
+			moveBigBoxesDown(x_pos, y_pos+1, field)
+		} else {
+			moveBigBoxesDown(x_pos, y_pos+1, field)
+			moveBigBoxesDown(x_pos+1, y_pos+1, field)
+		}
+		(*field)[y_pos+1][x_pos] = BoxLeft
 		(*field)[y_pos][x_pos] = Empty
-		(*field)[y_pos+1][x_pos] = currElement
+		(*field)[y_pos+1][x_pos+1] = BoxRight
+		(*field)[y_pos][x_pos+1] = Empty
+	} else if currElement == BoxRight {
+		moveBigBoxesDown(x_pos-1, y_pos, field)
 	}
-	if currElement == BoxRight {
-		moveBigBoxesDown(x_pos-1, y_pos+1, field, false)
-		moveBigBoxesDown(x_pos, y_pos+1, field, false)
-		(*field)[y_pos][x_pos] = Empty
-		(*field)[y_pos+1][x_pos] = currElement
-	}
-
 }
 
 func checkBoxesLeft(x_pos int, y_pos int, field *[][]FieldObject) bool {
