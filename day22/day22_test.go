@@ -15,6 +15,16 @@ func TestT1(t *testing.T) {
 	}
 }
 
+func TestT2(t *testing.T) {
+	file := filereader5.ReadFile("test2.txt")
+	got := Task2(file)
+	want := 23
+
+	if got != want {
+		t.Errorf("Got %d and wanted %d\n", got, want)
+	}
+}
+
 func TestCreateSecretTimes1(t *testing.T) {
 	secMap := make(map[int]int)
 	startInt := 123
@@ -114,5 +124,20 @@ func TestCreateSecretTimes10(t *testing.T) {
 
 	if startInt != want {
 		t.Errorf("Got %d and wanted %d\n", startInt, want)
+	}
+}
+
+func TestDetermineSequences(t *testing.T) {
+	secMap := make(map[int]int)
+	gotMap := determineSequences(123, 10, &secMap)
+	gotMax := 0
+	wantMax := 6
+	for _, entry := range gotMap {
+		if entry > gotMax {
+			gotMax = entry
+		}
+	}
+	if gotMax != wantMax {
+		t.Errorf("Got %d and wanted %d\n", gotMax, wantMax)
 	}
 }
